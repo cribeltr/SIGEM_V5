@@ -35,7 +35,7 @@ const ctx = {
   window: w, document: w.document, navigator: w.navigator,
   HTMLElement: w.HTMLElement, Node: w.Node, Event: w.Event, CustomEvent: w.CustomEvent,
   React, ReactDOM, htm,
-  console, setTimeout, clearTimeout, URL: w.URL, Blob: w.Blob,
+  console, setTimeout, clearTimeout, setInterval, clearInterval, URL: w.URL, Blob: w.Blob,
   XLSX: undefined, google: undefined, module: { exports: {} }
 };
 ctx.global = ctx; ctx.globalThis = ctx; ctx.self = ctx;

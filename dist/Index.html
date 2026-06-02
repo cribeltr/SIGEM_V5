@@ -1981,7 +1981,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
     blue:  { num: 'text-brand', ring: 'bg-brand/10 text-brand', bar: 'bg-brand' },
     slate: { num: 'text-slate-700 dark:text-slate-100', ring: 'bg-slate-100 text-slate-500 dark:bg-slate-800', bar: 'bg-slate-400' }
   };
-  function KPI({ label, value, sub, tone, icon, onClick }) {
+  function KPI({ label, value, sub, tone, icon, spark, onClick }) {
     const t = KPI_TONE[tone] || KPI_TONE.slate;
     return html`<button onClick=${onClick} class=${cx('group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-3.5 text-left shadow-soft transition dark:border-ink-line dark:bg-ink-800', onClick && 'cursor-pointer hover:border-brand/50 hover:shadow-glow')}>
       <div class="flex items-start justify-between">
@@ -1990,6 +1990,9 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
       </div>
       <div class=${cx('mt-1.5 text-[28px] font-bold leading-none tracking-tight mono', t.num)}>${value}</div>
       ${sub && html`<div class="mt-1 text-[11px] text-slate-400">${sub}</div>`}
+      ${spark && spark.length > 0 && html`<div class="mt-2 flex h-7 items-end gap-px" aria-hidden="true">
+        ${spark.map((v, i) => html`<div key=${i} class=${cx('flex-1 rounded-sm', t.bar)} style=${{ height: Math.max(8, v) + '%', opacity: (0.3 + 0.7 * (i + 1) / spark.length).toFixed(2) }}></div>`)}
+      </div>`}
       <span class=${cx('absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 transition group-hover:scale-x-100', t.bar)}></span>
     </button>`;
   }
@@ -2323,6 +2326,12 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
     const progMes = S.equipos.filter(e => e.estado !== 'baja' && HHHA.mpProgramadaEnMes(e, HHHA.NUM_MES[mes]));
     const ejecMes = progMes.filter(e => HHHA.mpDelMesEjecutada(e, year, mes));
     const pctMes = progMes.length ? Math.round(ejecMes.length / progMes.length * 100) : 100;
+    // Tendencia mensual de cumplimiento MP (para el sparkline del tile).
+    const trendMP = HHHA.MESES.map((m, idx) => {
+      let prog = 0, ej = 0;
+      S.equipos.forEach(e => { if (e.estado !== 'baja' && HHHA.mpProgramadaEnMes(e, m)) { prog++; if (HHHA.mpDelMesEjecutada(e, year, idx)) ej++; } });
+      return prog ? Math.round(ej / prog * 100) : 0;
+    });
 
     return html`<div class="space-y-6">
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -2331,7 +2340,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
         <${KPI} label="Fuera de vida útil" value=${fueraVU.length} tone="amber" icon="⧗" onClick=${() => go('equipos', { vur: true })} sub="vur < 0" />
         <${KPI} label="Pendientes vencidos" value=${pendVenc.length} tone="amber" icon="☑" onClick=${() => go('pendientes', { vencidos: true })} />
         <${KPI} label="Reprogramaciones" value=${reprogs.length} tone="blue" icon="↻" onClick=${() => go('pendientes', { tipo: 'reprogramacion' })} />
-        <${KPI} label=${'MP ' + HHHA.MES_ESPANOL[HHHA.NUM_MES[mes]]} value=${pctMes + '%'} tone=${pctMes >= 80 ? 'green' : 'amber'} icon="◷" onClick=${() => go('mpmes')} sub=${ejecMes.length + '/' + progMes.length} />
+        <${KPI} label=${'MP ' + HHHA.MES_ESPANOL[HHHA.NUM_MES[mes]]} value=${pctMes + '%'} tone=${pctMes >= 80 ? 'green' : 'amber'} icon="◷" spark=${trendMP} onClick=${() => go('mpmes')} sub=${ejecMes.length + '/' + progMes.length} />
       </div>
 
       <div class="grid gap-4 lg:grid-cols-2">
@@ -2691,6 +2700,33 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
   // ==========================================================================
   // TOASTS
   // ==========================================================================
+  // Reloj en vivo (estilo consola de operaciones).
+  function LiveClock() {
+    const [t, setT] = useState(new Date());
+    useEffect(() => { const id = setInterval(() => setT(new Date()), 1000); return () => clearInterval(id); }, []);
+    const p = (n) => String(n).padStart(2, '0');
+    return html`<span class="mono tabular-nums">${p(t.getHours())}:${p(t.getMinutes())}:${p(t.getSeconds())}</span>`;
+  }
+
+  // Franja superior de estado: reloj + contadores globales en vivo.
+  function StatusStrip() {
+    const S = HHHA.getState();
+    const total = S.equipos.filter(e => e.estado !== 'baja').length;
+    const op = S.equipos.filter(e => e.estado === 'operativo').length;
+    const noop = S.equipos.filter(e => e.estado === 'no_operativo').length;
+    const st = S.equipos.filter(e => e.estado === 'en_servicio_tecnico').length;
+    const opPct = total ? Math.round(op / total * 100) : 0;
+    const item = (dot, label, val) => html`<span class="flex items-center gap-1.5"><span class=${cx('h-1.5 w-1.5 rounded-full', dot)}></span><span class="text-slate-400">${label}</span><span class="mono font-semibold">${val}</span></span>`;
+    return html`<div class="flex items-center gap-4 overflow-x-auto border-b border-slate-200 bg-slate-100/60 px-4 py-1 text-[11px] dark:border-ink-line dark:bg-ink-900/60 lg:px-6">
+      <span class="flex items-center gap-1.5 font-semibold text-brand"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-brand shadow-glow"></span>EN VIVO</span>
+      ${item('bg-op', 'Operativos', opPct + '%')}
+      ${item('bg-noop', 'No oper.', noop)}
+      ${item('bg-st', 'Serv. téc.', st)}
+      ${item('bg-slate-400', 'Parque', total)}
+      <span class="ml-auto flex items-center gap-1.5 text-slate-400"><${LiveClock} /></span>
+    </div>`;
+  }
+
   function Toasts({ items }) {
     return html`<div class="fixed bottom-4 right-4 z-50 space-y-2">${items.map(t => html`<div key=${t.id} class=${cx('rounded-lg px-4 py-2.5 text-sm text-white shadow-lg', t.type === 'warn' ? 'bg-amber-600' : t.type === 'err' ? 'bg-red-600' : 'bg-slate-800 dark:bg-slate-700')}>${t.msg}</div>`)}</div>`;
   }
@@ -2775,6 +2811,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
 
       <!-- Main -->
       <div class="flex min-w-0 flex-1 flex-col">
+        ${h(StatusStrip, {})}
         <header class="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200 bg-white/85 px-4 py-2.5 backdrop-blur-md dark:border-ink-line dark:bg-ink-800/85 lg:px-6">
           <button class="rounded-lg border border-slate-200 p-1.5 dark:border-ink-line lg:hidden" onClick=${() => setSidebar(true)} aria-label="Menú">☰</button>
           <div>
