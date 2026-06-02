@@ -16,26 +16,29 @@
       darkMode: 'class',
       theme: { extend: {
         colors: {
-          // Paleta "densa pro" del SIGEM original (acento índigo + estados exactos)
-          brand: { DEFAULT: '#4f46e5', 2: '#6366f1', dk: '#7c7bf6' },
+          // Identidad propia SIGEM_V5: teal/esmeralda "clínico" + acento cálido
+          brand: { DEFAULT: '#0d9488', 2: '#0f766e', 3: '#14b8a6', dk: '#2dd4bf', ink: '#042f2e' },
+          accent:{ DEFAULT: '#f59e0b', dk: '#fbbf24' },
           op:    { DEFAULT: '#0f9d6b', soft: '#e6f6ef', dk: '#2bbd83' },
           noop:  { DEFAULT: '#e0334b', soft: '#fdecef', dk: '#f1647c' },
           st:    { DEFAULT: '#d98613', soft: '#fcf2e3', dk: '#e6a23c' },
           baja:  { DEFAULT: '#6b7280', soft: '#eef0f2', dk: '#8b94a0' },
           desc:  { DEFAULT: '#8a93a0', soft: '#eef1f4', dk: '#79828e' }
         },
-        borderRadius: { lg: '7px', xl: '9px', md: '5px' },
+        borderRadius: { md: '10px', lg: '14px', xl: '18px', '2xl': '24px' },
+        boxShadow: { soft: '0 1px 2px rgba(13,148,136,.04), 0 6px 24px -8px rgba(15,23,42,.12)', lift: '0 10px 40px -12px rgba(13,148,136,.30)' },
         fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] }
       } }
     };
   </script>
   <style>
     html, body, #root { height: 100%; }
-    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-size: 13px; line-height: 1.45; }
-    .mono { font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; letter-spacing: -.2px; }
+    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-size: 14px; line-height: 1.5; }
+    .mono { font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; letter-spacing: -.2px; }
+    .brand-gradient { background-image: linear-gradient(120deg, #0d9488 0%, #0f766e 55%, #115e59 100%); }
     .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(120,120,120,.35); border-radius: 8px; }
-    [data-drawer], [data-overlay] { transition: transform .18s ease, opacity .18s ease; }
+    [data-drawer], [data-overlay] { transition: transform .2s cubic-bezier(.2,.8,.2,1), opacity .2s ease; }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
   <!-- SIGEM:STYLE -->
@@ -1958,23 +1961,34 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
 
   function Btn({ onClick, children, variant = 'default', size = 'md', className, ...rest }) {
     const v = {
-      default: 'bg-brand text-white hover:bg-brand-2 dark:bg-brand-dk dark:text-white dark:hover:bg-brand-2',
-      ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200',
-      outline: 'border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800',
-      danger: 'bg-red-600 text-white hover:bg-red-500'
+      default: 'bg-brand text-white shadow-soft hover:bg-brand-2 active:scale-[.98] dark:bg-brand-3 dark:text-brand-ink dark:hover:bg-brand-dk',
+      ghost: 'bg-transparent hover:bg-brand/10 text-slate-600 dark:text-slate-300 dark:hover:bg-white/5',
+      outline: 'border border-slate-200 bg-white hover:border-brand/40 hover:bg-brand/5 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800',
+      danger: 'bg-noop text-white hover:brightness-110'
     }[variant];
-    const s = size === 'sm' ? 'px-2.5 py-1 text-xs' : 'px-3.5 py-2 text-sm';
-    return html`<button onClick=${onClick} class=${cx('inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50', v, s, className)} ...${rest}>${children}</button>`;
+    const s = size === 'sm' ? 'px-3 py-1.5 text-xs' : 'px-4 py-2.5 text-sm';
+    return html`<button onClick=${onClick} class=${cx('inline-flex items-center justify-center gap-1.5 rounded-full font-semibold transition focus:outline-none focus:ring-2 focus:ring-brand/40 disabled:opacity-50', v, s, className)} ...${rest}>${children}</button>`;
   }
 
-  function Card({ children, className }) { return html`<div class=${cx('rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900', className)}>${children}</div>`; }
+  function Card({ children, className }) { return html`<div class=${cx('rounded-2xl border border-slate-200/80 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900', className)}>${children}</div>`; }
 
-  function KPI({ label, value, sub, tone, onClick }) {
-    const tones = { red: 'text-red-600', amber: 'text-amber-600', green: 'text-emerald-600', blue: 'text-blue-600', slate: 'text-slate-700 dark:text-slate-200' };
-    return html`<button onClick=${onClick} class=${cx('rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:shadow dark:border-slate-800 dark:bg-slate-900', onClick && 'hover:border-blue-400 cursor-pointer')}>
-      <div class="text-xs font-medium uppercase tracking-wide text-slate-400">${label}</div>
-      <div class=${cx('mt-1 text-2xl font-bold mono', tones[tone] || tones.slate)}>${value}</div>
+  const KPI_TONE = {
+    red:   { num: 'text-noop',  ring: 'bg-noop/10 text-noop',   bar: 'bg-noop' },
+    amber: { num: 'text-st',    ring: 'bg-st/10 text-st',       bar: 'bg-st' },
+    green: { num: 'text-op',    ring: 'bg-op/10 text-op',       bar: 'bg-op' },
+    blue:  { num: 'text-brand', ring: 'bg-brand/10 text-brand', bar: 'bg-brand' },
+    slate: { num: 'text-slate-700 dark:text-slate-100', ring: 'bg-slate-100 text-slate-500 dark:bg-slate-800', bar: 'bg-slate-400' }
+  };
+  function KPI({ label, value, sub, tone, icon, onClick }) {
+    const t = KPI_TONE[tone] || KPI_TONE.slate;
+    return html`<button onClick=${onClick} class=${cx('group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 text-left shadow-soft transition dark:border-slate-800 dark:bg-slate-900', onClick && 'hover:-translate-y-0.5 hover:shadow-lift cursor-pointer')}>
+      <div class="flex items-start justify-between">
+        <div class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">${label}</div>
+        ${icon && html`<span class=${cx('flex h-7 w-7 items-center justify-center rounded-xl text-sm', t.ring)}>${icon}</span>`}
+      </div>
+      <div class=${cx('mt-2 text-3xl font-bold tracking-tight mono', t.num)}>${value}</div>
       ${sub && html`<div class="mt-0.5 text-xs text-slate-400">${sub}</div>`}
+      <span class=${cx('absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 transition group-hover:scale-x-100', t.bar)}></span>
     </button>`;
   }
 
@@ -2008,7 +2022,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
       ${hint && html`<div class="mt-1 text-xs text-slate-400">${hint}</div>`}
     </label>`;
   }
-  const inputCls = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:border-slate-700 dark:bg-slate-800';
+  const inputCls = 'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30 dark:border-slate-700 dark:bg-slate-800';
   function TextInput(p) { const { class: cls, className, ...rest } = p; return html`<input ...${rest} class=${cx(inputCls, cls, className)} />`; }
   function Select({ value, onChange, options, placeholder }) {
     return html`<select value=${value} onChange=${onChange} class=${inputCls}>
@@ -2187,7 +2201,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
         ${eq.estado !== 'baja' && html`<${Btn} size="sm" variant="ghost" onClick=${() => { const m = prompt('Motivo de baja:'); if (m) { HHHA.darDeBaja(eq, m); scheduleSync(); refresh(); } }}>Dar de baja</${Btn}>`}
       </div>
       <div class="mb-4 flex gap-1 overflow-x-auto border-b border-slate-200 dark:border-slate-800">
-        ${tabs.map(([k, l]) => html`<button key=${k} onClick=${() => setTab(k)} class=${cx('whitespace-nowrap px-3 py-2 text-sm font-medium border-b-2 -mb-px', tab === k ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700')}>${l}</button>`)}
+        ${tabs.map(([k, l]) => html`<button key=${k} onClick=${() => setTab(k)} class=${cx('whitespace-nowrap px-3 py-2 text-sm font-medium border-b-2 -mb-px', tab === k ? 'border-brand text-brand' : 'border-transparent text-slate-500 hover:text-slate-700')}>${l}</button>`)}
       </div>
       ${tab === 'resumen' && h(FichaResumen, { eq, refresh })}
       ${tab === 'matriz' && h(FichaMatriz, { eq, openDrawer, refresh })}
@@ -2269,7 +2283,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
   function FichaPendientes({ eq, openDrawer }) {
     const pends = HHHA.pendientesDe(eq.inv);
     if (!pends.length) return h(Empty, { title: 'Sin pendientes' });
-    return html`<div class="space-y-2">${pends.map(p => html`<button key=${p.id} onClick=${() => openDrawer({ type: 'pendiente', pend: p })} class="block w-full rounded-lg border border-slate-200 p-3 text-left text-sm hover:border-blue-400 dark:border-slate-800">
+    return html`<div class="space-y-2">${pends.map(p => html`<button key=${p.id} onClick=${() => openDrawer({ type: 'pendiente', pend: p })} class="block w-full rounded-lg border border-slate-200 p-3 text-left text-sm hover:border-brand/50 dark:border-slate-800">
       <div class="flex items-center justify-between"><span class="font-medium">${HHHA.TIPO_PENDIENTE[p.tipo] || p.tipo}</span><${Chip} cls=${PEND_META[p.estado].chip}>${PEND_META[p.estado].label}</${Chip}></div>
       <div class="mt-0.5 text-xs text-slate-500">${p.desc}</div>
     </button>`)}</div>`;
@@ -2310,19 +2324,19 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
 
     return html`<div class="space-y-6">
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <${KPI} label="No operativos / ST" value=${caidos.length} tone="red" onClick=${() => go('correctivos')} sub="Pipeline correctivo" />
-        <${KPI} label="Detenidos >30 días" value=${masTreinta.length} tone="red" onClick=${() => go('correctivos')} />
-        <${KPI} label="Fuera de vida útil" value=${fueraVU.length} tone="amber" onClick=${() => go('equipos', { vur: true })} sub="vur < 0" />
-        <${KPI} label="Pendientes vencidos" value=${pendVenc.length} tone="amber" onClick=${() => go('pendientes', { vencidos: true })} />
-        <${KPI} label="Reprogramaciones" value=${reprogs.length} tone="blue" onClick=${() => go('pendientes', { tipo: 'reprogramacion' })} />
-        <${KPI} label=${'MP ' + HHHA.MES_ESPANOL[HHHA.NUM_MES[mes]]} value=${pctMes + '%'} tone=${pctMes >= 80 ? 'green' : 'amber'} onClick=${() => go('mpmes')} sub=${ejecMes.length + '/' + progMes.length} />
+        <${KPI} label="No operativos / ST" value=${caidos.length} tone="red" icon="⚠" onClick=${() => go('correctivos')} sub="Pipeline correctivo" />
+        <${KPI} label="Detenidos >30 días" value=${masTreinta.length} tone="red" icon="⏱" onClick=${() => go('correctivos')} />
+        <${KPI} label="Fuera de vida útil" value=${fueraVU.length} tone="amber" icon="⧗" onClick=${() => go('equipos', { vur: true })} sub="vur < 0" />
+        <${KPI} label="Pendientes vencidos" value=${pendVenc.length} tone="amber" icon="☑" onClick=${() => go('pendientes', { vencidos: true })} />
+        <${KPI} label="Reprogramaciones" value=${reprogs.length} tone="blue" icon="↻" onClick=${() => go('pendientes', { tipo: 'reprogramacion' })} />
+        <${KPI} label=${'MP ' + HHHA.MES_ESPANOL[HHHA.NUM_MES[mes]]} value=${pctMes + '%'} tone=${pctMes >= 80 ? 'green' : 'amber'} icon="◷" onClick=${() => go('mpmes')} sub=${ejecMes.length + '/' + progMes.length} />
       </div>
 
       <div class="grid gap-4 lg:grid-cols-2">
         <${Card}>
           <div class="mb-2 flex items-center justify-between"><h3 class="font-semibold">Equipos caídos prioritarios</h3><${Btn} size="sm" variant="ghost" onClick=${() => go('correctivos')}>Ver pipeline →</${Btn}></div>
           ${caidos.length === 0 ? h(Empty, { title: 'Todo operativo 🎉' }) : html`<div class="space-y-1.5">
-            ${caidos.slice().sort((a, b) => HHHA.diasEnEstado(b) - HHHA.diasEnEstado(a)).slice(0, 6).map(e => html`<button key=${e.inv} onClick=${() => openFicha(e.inv)} class="flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:border-blue-400 dark:border-slate-800">
+            ${caidos.slice().sort((a, b) => HHHA.diasEnEstado(b) - HHHA.diasEnEstado(a)).slice(0, 6).map(e => html`<button key=${e.inv} onClick=${() => openFicha(e.inv)} class="flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:border-brand/50 dark:border-slate-800">
               <span class="truncate"><span class="mono text-slate-400">${e.inv}</span> ${e.equipo}</span>
               <span class="flex items-center gap-2"><${EstadoChip} estado=${e.estado} /><span class=${cx('mono text-xs', HHHA.diasEnEstado(e) > 30 ? 'text-red-500' : 'text-slate-400')}>${HHHA.diasEnEstado(e)}d</span></span>
             </button>`)}
@@ -2331,7 +2345,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
         <${Card}>
           <div class="mb-2 flex items-center justify-between"><h3 class="font-semibold">Pendientes accionables</h3><${Btn} size="sm" variant="ghost" onClick=${() => go('pendientes')}>Ver todos →</${Btn}></div>
           ${pendVenc.length === 0 ? h(Empty, { title: 'Sin vencidos' }) : html`<div class="space-y-1.5">
-            ${pendVenc.slice(0, 6).map(p => html`<button key=${p.id} onClick=${() => openDrawer({ type: 'pendiente', pend: p })} class="flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:border-blue-400 dark:border-slate-800">
+            ${pendVenc.slice(0, 6).map(p => html`<button key=${p.id} onClick=${() => openDrawer({ type: 'pendiente', pend: p })} class="flex w-full items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:border-brand/50 dark:border-slate-800">
               <span class="truncate">${p.equipo} · ${p.desc}</span>
               <span class="mono text-xs text-red-500">+${HHHA.diasEntreFechas(p.fechaComp, hoy())}d</span>
             </button>`)}
@@ -2383,7 +2397,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
       </div>
       ${cerrados.length > 0 && html`<${Card}>
         <h3 class="mb-2 text-sm font-semibold text-slate-500">Cerrados recientemente</h3>
-        <div class="flex flex-wrap gap-2">${cerrados.map(c => { const eq = HHHA.findEquipo(c.inv) || {}; return html`<button key=${c.id} onClick=${() => openFicha(c.inv)} class="rounded-lg border border-slate-200 px-2.5 py-1 text-xs hover:border-blue-400 dark:border-slate-800"><span class="mono text-slate-400">${c.inv}</span> ${eq.equipo || ''} ✓</button>`; })}</div>
+        <div class="flex flex-wrap gap-2">${cerrados.map(c => { const eq = HHHA.findEquipo(c.inv) || {}; return html`<button key=${c.id} onClick=${() => openFicha(c.inv)} class="rounded-lg border border-slate-200 px-2.5 py-1 text-xs hover:border-brand/50 dark:border-slate-800"><span class="mono text-slate-400">${c.inv}</span> ${eq.equipo || ''} ✓</button>`; })}</div>
       </${Card}>`}
     </div>`;
   }
@@ -2464,8 +2478,8 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
         <label class="flex items-center gap-1.5 text-sm text-slate-500"><input type="checkbox" checked=${soloVenc} onChange=${e => setSoloVenc(e.target.checked)} /> Solo vencidos</label>
         <div class="ml-auto"><${Btn} size="sm" onClick=${() => openDrawer({ type: 'pendiente-nuevo' })}>+ Pendiente</${Btn}></div>
       </div>
-      <div class="flex flex-wrap gap-1.5">${Object.entries(carga).sort((a, b) => b[1] - a[1]).map(([k, v]) => html`<button key=${k} onClick=${() => setFResp(k)} class="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs hover:border-blue-400 dark:border-slate-800"><span class="text-slate-500">${k}</span> <span class="mono font-semibold">${v}</span></button>`)}</div>
-      <div class="space-y-2">${list.map(p => { const venc = p.estado !== 'cerrado' && p.fechaComp && HHHA.diasEntreFechas(p.fechaComp, hoy()) > 0; return html`<button key=${p.id} onClick=${() => openDrawer({ type: 'pendiente', pend: p })} class="flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:border-blue-400 dark:border-slate-800">
+      <div class="flex flex-wrap gap-1.5">${Object.entries(carga).sort((a, b) => b[1] - a[1]).map(([k, v]) => html`<button key=${k} onClick=${() => setFResp(k)} class="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs hover:border-brand/50 dark:border-slate-800"><span class="text-slate-500">${k}</span> <span class="mono font-semibold">${v}</span></button>`)}</div>
+      <div class="space-y-2">${list.map(p => { const venc = p.estado !== 'cerrado' && p.fechaComp && HHHA.diasEntreFechas(p.fechaComp, hoy()) > 0; return html`<button key=${p.id} onClick=${() => openDrawer({ type: 'pendiente', pend: p })} class="flex w-full items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:border-brand/50 dark:border-slate-800">
         <span class="min-w-0 flex-1"><span class="font-medium">${p.equipo || p.inv}</span> <span class="text-slate-400">· ${HHHA.TIPO_PENDIENTE[p.tipo] || p.tipo}</span><div class="truncate text-xs text-slate-500">${p.desc}</div></span>
         <span class="flex shrink-0 items-center gap-2">
           ${p.ejecutor && html`<span class="hidden text-xs text-slate-400 sm:inline">${p.ejecutor.split(' ')[0]}</span>`}
@@ -2531,7 +2545,7 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
         <h3 class="mb-3 font-semibold">Tendencia de cumplimiento MP ${year}</h3>
         <div class="flex items-end gap-2" style=${{ height: '160px' }}>
           ${trend.map(t => html`<div key=${t.m} class="flex flex-1 flex-col items-center justify-end gap-1">
-            <div class="w-full rounded-t bg-blue-500/80" style=${{ height: Math.max(2, t.pct) + '%' }} title=${t.pct + '%'}></div>
+            <div class="w-full rounded-t bg-brand/80" style=${{ height: Math.max(2, t.pct) + '%' }} title=${t.pct + '%'}></div>
             <div class="text-[10px] text-slate-400">${t.m}</div>
           </div>`)}
         </div>
@@ -2738,29 +2752,50 @@ if (typeof window !== "undefined") { window.SEED = SEED; }
     })();
     const titulo = (NAV.find(n => n[0] === view) || [])[1] || '';
 
-    return html`<div class="flex h-full">
-      <!-- Sidebar -->
-      <aside class=${cx('fixed inset-y-0 left-0 z-30 w-52 transform border-r border-slate-200 bg-white p-2.5 transition-transform dark:border-slate-800 dark:bg-slate-900 lg:static lg:translate-x-0', sidebar ? 'translate-x-0' : '-translate-x-full')}>
-        <div class="mb-4 flex items-center gap-2 px-2">
-          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white">SG</div>
-          <div><div class="text-sm font-bold leading-none">SIGEM</div><div class="text-[10px] text-slate-400">Equipos biomédicos</div></div>
+    const NAV_MOBILE = ['cola', 'correctivos', 'equipos', 'pendientes'];
+    return html`<div class="flex h-full bg-slate-50 dark:bg-slate-950">
+      <!-- Sidebar flotante (escritorio) / drawer (móvil) -->
+      <aside class=${cx('fixed inset-y-0 left-0 z-30 flex w-64 transform flex-col p-3 transition-transform lg:static lg:translate-x-0', sidebar ? 'translate-x-0' : '-translate-x-full')}>
+        <div class="flex h-full flex-col rounded-3xl border border-slate-200/70 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex items-center gap-3 px-4 pt-5">
+            <div class="brand-gradient flex h-10 w-10 items-center justify-center rounded-2xl text-base font-black text-white shadow-lift">S</div>
+            <div><div class="text-[15px] font-extrabold leading-none tracking-tight">SIGEM</div><div class="mt-0.5 text-[11px] text-slate-400">Equipos biomédicos</div></div>
+          </div>
+          <nav class="mt-5 flex-1 space-y-1 overflow-y-auto px-2.5 pb-3">${NAV.map(([k, l, ic]) => html`<button key=${k} onClick=${() => go(k)} class=${cx('group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition', view === k ? 'bg-brand text-white shadow-soft dark:bg-brand-3 dark:text-brand-ink' : 'text-slate-500 hover:bg-brand/5 hover:text-brand dark:text-slate-400 dark:hover:bg-white/5')}>
+            <span class=${cx('flex h-7 w-7 items-center justify-center rounded-xl text-[15px]', view === k ? 'bg-white/20' : 'bg-slate-100 text-slate-500 group-hover:bg-brand/10 group-hover:text-brand dark:bg-slate-800')}>${ic}</span>${l}
+          </button>`)}</nav>
+          <div class="border-t border-slate-100 px-4 py-3 text-[11px] text-slate-400 dark:border-slate-800">
+            <div class="flex items-center gap-2"><span class=${cx('h-2 w-2 rounded-full', GAS ? 'bg-op' : 'bg-st')}></span>${GAS ? 'Sincronizado · Sheets' : 'Local (demo)'}</div>
+            <div class="mt-0.5 truncate">${user || 'sesión local'} · v5.0.0</div>
+          </div>
         </div>
-        <nav class="space-y-0.5">${NAV.map(([k, l, ic]) => html`<button key=${k} onClick=${() => go(k)} class=${cx('flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition', view === k ? 'bg-brand text-white dark:bg-brand-dk' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800')}><span class="w-4 text-center opacity-70">${ic}</span>${l}</button>`)}</nav>
       </aside>
-      ${sidebar && html`<div class="fixed inset-0 z-20 bg-black/30 lg:hidden" onClick=${() => setSidebar(false)}></div>`}
+      ${sidebar && html`<div class="fixed inset-0 z-20 bg-slate-900/40 backdrop-blur-sm lg:hidden" onClick=${() => setSidebar(false)}></div>`}
 
       <!-- Main -->
       <div class="flex min-w-0 flex-1 flex-col">
-        <header class="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200 bg-white/90 px-4 py-2.5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/90">
-          <button class="rounded-lg p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden" onClick=${() => setSidebar(true)} aria-label="Menú">☰</button>
-          <h1 class="text-base font-semibold">${titulo}</h1>
-          <div class="ml-auto flex items-center gap-1.5">
-            <button onClick=${() => setPalette(true)} class="hidden items-center gap-2 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-400 hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 sm:flex">Buscar <kbd class="rounded bg-slate-100 px-1 dark:bg-slate-800">⌘K</kbd></button>
-            <button onClick=${toggleDark} class="rounded-lg p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Tema">${dark ? '☀' : '☾'}</button>
+        <header class="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200/70 bg-slate-50/80 px-4 py-3 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80 lg:px-6">
+          <button class="rounded-xl border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900 lg:hidden" onClick=${() => setSidebar(true)} aria-label="Menú">☰</button>
+          <div>
+            <h1 class="text-lg font-extrabold tracking-tight">${titulo}</h1>
+            <div class="hidden text-xs text-slate-400 sm:block">Gestión de mantenimiento preventivo y correctivo</div>
+          </div>
+          <div class="ml-auto flex items-center gap-2">
+            <button onClick=${() => setPalette(true)} class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs text-slate-400 transition hover:border-brand/40 hover:text-brand dark:border-slate-700 dark:bg-slate-900 sm:flex">🔍 Buscar… <kbd class="rounded bg-slate-100 px-1.5 py-0.5 dark:bg-slate-800">⌘K</kbd></button>
+            <button onClick=${() => setPalette(true)} class="rounded-full border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900 sm:hidden" aria-label="Buscar">🔍</button>
+            <button onClick=${toggleDark} class="rounded-full border border-slate-200 bg-white p-2 text-slate-500 transition hover:text-brand dark:border-slate-700 dark:bg-slate-900" aria-label="Tema">${dark ? '☀' : '☾'}</button>
           </div>
         </header>
-        <main class="scrollbar-thin flex-1 overflow-y-auto p-4 lg:p-6">${viewNode}</main>
+        <main class="scrollbar-thin flex-1 overflow-y-auto p-4 pb-24 lg:p-6 lg:pb-6">${viewNode}</main>
       </div>
+
+      <!-- Barra inferior tipo app (móvil/tablet, para terreno) -->
+      <nav class="fixed inset-x-0 bottom-0 z-20 flex border-t border-slate-200 bg-white/95 px-2 py-1.5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 lg:hidden">
+        ${NAV_MOBILE.map(k => { const item = NAV.find(n => n[0] === k); return html`<button key=${k} onClick=${() => go(k)} class=${cx('flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-semibold transition', view === k ? 'text-brand' : 'text-slate-400')}>
+          <span class="text-lg">${item[2]}</span>${item[1].split(' ')[0]}
+        </button>`; })}
+        <button onClick=${() => setSidebar(true)} class="flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-semibold text-slate-400"><span class="text-lg">⋯</span>Más</button>
+      </nav>
 
       <!-- Drawers / overlays -->
       ${ficha && h(FichaEquipo, { inv: ficha, onClose: () => { setFicha(null); tick(); }, openDrawer })}
