@@ -6,8 +6,10 @@ paridad). Pensada para uso **diario** —preventivo (MP) y correctivo— con én
 en la **reparación de equipos no operativos / en servicio técnico**.
 
 - **Frontend:** React + htm + Tailwind (por CDN, sin paso de build pesado), UI
-  nueva y **responsive** (escritorio y móvil/tablet), modo claro/oscuro, command
-  palette, drawers accesibles. Servido como un único `Index.html`.
+  nueva y **responsive** (escritorio y móvil/tablet). Diseño propio **"centro de
+  control"**: oscuro por defecto (navy/grafito + acento cian), barra de estado en
+  vivo, KPIs con sparkline, command palette, drawers accesibles, barra inferior
+  tipo app en móvil. Servido como un único `Index.html`.
 - **Backend / BD:** **Google Apps Script + Google Sheets**. Auth real por **login
   de Google**. Identidad del usuario usada como autor en la auditoría.
 - **Lógica de negocio:** `src/core/hhha-core.js`, portada **verbatim** del
@@ -35,12 +37,15 @@ npm test         # 30/30 tests de paridad de reglas
 npm run build    # genera dist/Index.html (incluye limpieza del seed)
 ```
 
-Para **previsualizar la UI** sin Apps Script, sirve `web/` con cualquier servidor
-estático (la app detecta que no hay Apps Script y usa `localStorage`):
+Para **previsualizar la UI** sin Apps Script ni conexión, genera un HTML
+autocontenido y ábrelo con doble clic (datos demo en `localStorage`):
 
 ```bash
-npx serve web      # luego abre la URL que muestre (usa el seed limpio local)
+npm run build:preview   # genera dist/SIGEM-preview.html (offline, sin CDN)
 ```
+
+También puedes servir `web/` con cualquier servidor estático
+(`npx serve web`); la app detecta que no hay Apps Script y usa `localStorage`.
 
 ## Despliegue en Google (Apps Script + Sheets)
 
