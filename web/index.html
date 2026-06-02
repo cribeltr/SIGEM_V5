@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>SIGEM · Equipos Biomédicos</title>
+  <!--
+    SIGEM_V5 — shell de DESARROLLO. Carga las dependencias por CDN y las fuentes
+    por separado para iterar rápido (abrir web/index.html con un servidor estático).
+    El build (tools/build.js) inlina TODO en dist/Index.html para pegar en Apps Script.
+    Marcadores SIGEM:* los usa el build para inyectar el contenido inline.
+  -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: { extend: {
+        colors: {
+          op:    { DEFAULT: '#16a34a', soft: '#dcfce7', dk: '#052e16' },
+          noop:  { DEFAULT: '#dc2626', soft: '#fee2e2', dk: '#450a0a' },
+          st:    { DEFAULT: '#d97706', soft: '#fef3c7', dk: '#451a03' },
+          baja:  { DEFAULT: '#64748b', soft: '#e2e8f0', dk: '#1e293b' },
+          desc:  { DEFAULT: '#94a3b8', soft: '#f1f5f9', dk: '#0f172a' }
+        }
+      } }
+    };
+  </script>
+  <style>
+    html, body, #root { height: 100%; }
+    body { -webkit-font-smoothing: antialiased; }
+    .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+    .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(120,120,120,.35); border-radius: 8px; }
+    [data-drawer], [data-overlay] { transition: transform .18s ease, opacity .18s ease; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+  <!-- SIGEM:STYLE -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
+  <div id="root"></div>
+
+  <!-- SIGEM:SEED -->
+  <script src="../src/data/seed.clean.js"></script>
+  <!-- SIGEM:CORE -->
+  <script src="../src/core/hhha-core.js"></script>
+  <!-- SIGEM:APP -->
+  <script src="./js/app.js"></script>
+</body>
+</html>
