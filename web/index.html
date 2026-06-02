@@ -16,19 +16,23 @@
       darkMode: 'class',
       theme: { extend: {
         colors: {
-          op:    { DEFAULT: '#16a34a', soft: '#dcfce7', dk: '#052e16' },
-          noop:  { DEFAULT: '#dc2626', soft: '#fee2e2', dk: '#450a0a' },
-          st:    { DEFAULT: '#d97706', soft: '#fef3c7', dk: '#451a03' },
-          baja:  { DEFAULT: '#64748b', soft: '#e2e8f0', dk: '#1e293b' },
-          desc:  { DEFAULT: '#94a3b8', soft: '#f1f5f9', dk: '#0f172a' }
-        }
+          // Paleta "densa pro" del SIGEM original (acento índigo + estados exactos)
+          brand: { DEFAULT: '#4f46e5', 2: '#6366f1', dk: '#7c7bf6' },
+          op:    { DEFAULT: '#0f9d6b', soft: '#e6f6ef', dk: '#2bbd83' },
+          noop:  { DEFAULT: '#e0334b', soft: '#fdecef', dk: '#f1647c' },
+          st:    { DEFAULT: '#d98613', soft: '#fcf2e3', dk: '#e6a23c' },
+          baja:  { DEFAULT: '#6b7280', soft: '#eef0f2', dk: '#8b94a0' },
+          desc:  { DEFAULT: '#8a93a0', soft: '#eef1f4', dk: '#79828e' }
+        },
+        borderRadius: { lg: '7px', xl: '9px', md: '5px' },
+        fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] }
       } }
     };
   </script>
   <style>
     html, body, #root { height: 100%; }
-    body { -webkit-font-smoothing: antialiased; }
-    .mono { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-size: 13px; line-height: 1.45; }
+    .mono { font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; letter-spacing: -.2px; }
     .scrollbar-thin::-webkit-scrollbar { width: 8px; height: 8px; }
     .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(120,120,120,.35); border-radius: 8px; }
     [data-drawer], [data-overlay] { transition: transform .18s ease, opacity .18s ease; }

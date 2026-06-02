@@ -28,11 +28,11 @@
 
   // ---- Catálogos de presentación -----------------------------------------
   const ESTADO_META = {
-    operativo:           { label: 'Operativo',         dot: '#16a34a', chip: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
-    no_operativo:        { label: 'No operativo',      dot: '#dc2626', chip: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
-    en_servicio_tecnico: { label: 'En servicio técn.', dot: '#d97706', chip: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
-    baja:                { label: 'Baja',              dot: '#64748b', chip: 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300' },
-    desconocido:         { label: 'Desconocido',       dot: '#94a3b8', chip: 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400' }
+    operativo:           { label: 'Operativo',         dot: '#0f9d6b', chip: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
+    no_operativo:        { label: 'No operativo',      dot: '#e0334b', chip: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300' },
+    en_servicio_tecnico: { label: 'En servicio técn.', dot: '#d98613', chip: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300' },
+    baja:                { label: 'Baja',              dot: '#6b7280', chip: 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-300' },
+    desconocido:         { label: 'Desconocido',       dot: '#8a93a0', chip: 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400' }
   };
   const PEND_META = {
     no_iniciado: { label: 'No iniciado', chip: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300' },
@@ -114,7 +114,7 @@
 
   function Btn({ onClick, children, variant = 'default', size = 'md', className, ...rest }) {
     const v = {
-      default: 'bg-slate-900 text-white hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200',
+      default: 'bg-brand text-white hover:bg-brand-2 dark:bg-brand-dk dark:text-white dark:hover:bg-brand-2',
       ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200',
       outline: 'border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800',
       danger: 'bg-red-600 text-white hover:bg-red-500'
@@ -645,7 +645,7 @@
     return html`<div class="space-y-3">
       <div class="flex flex-wrap items-center gap-2">
         <div class="inline-flex rounded-lg border border-slate-200 p-0.5 dark:border-slate-800">
-          ${[['bitacora', 'Bitácora'], ['correctivos', 'Correctivos']].map(([k, l]) => html`<button key=${k} onClick=${() => setModo(k)} class=${cx('rounded-md px-3 py-1 text-sm', modo === k ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-500')}>${l}</button>`)}
+          ${[['bitacora', 'Bitácora'], ['correctivos', 'Correctivos']].map(([k, l]) => html`<button key=${k} onClick=${() => setModo(k)} class=${cx('rounded-md px-3 py-1 text-sm', modo === k ? 'bg-brand text-white dark:bg-brand-dk' : 'text-slate-500')}>${l}</button>`)}
         </div>
         ${modo === 'bitacora' && html`<${TextInput} type="date" value=${desde} onChange=${e => setDesde(e.target.value)} class="w-auto" />`}
         ${modo === 'bitacora' && html`<${TextInput} type="date" value=${hasta} onChange=${e => setHasta(e.target.value)} class="w-auto" />`}
@@ -681,7 +681,7 @@
     });
     return html`<div class="space-y-4">
       <div class="inline-flex rounded-lg border border-slate-200 p-0.5 dark:border-slate-800">
-        ${[['servicio', 'Por servicio'], ['mes', 'Por mes']].map(([k, l]) => html`<button key=${k} onClick=${() => setModo(k)} class=${cx('rounded-md px-3 py-1 text-sm', modo === k ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-500')}>${l}</button>`)}
+        ${[['servicio', 'Por servicio'], ['mes', 'Por mes']].map(([k, l]) => html`<button key=${k} onClick=${() => setModo(k)} class=${cx('rounded-md px-3 py-1 text-sm', modo === k ? 'bg-brand text-white dark:bg-brand-dk' : 'text-slate-500')}>${l}</button>`)}
       </div>
       ${modo === 'mes' ? html`<${Card}>
         <h3 class="mb-3 font-semibold">Tendencia de cumplimiento MP ${year}</h3>
@@ -896,12 +896,12 @@
 
     return html`<div class="flex h-full">
       <!-- Sidebar -->
-      <aside class=${cx('fixed inset-y-0 left-0 z-30 w-60 transform border-r border-slate-200 bg-white p-3 transition-transform dark:border-slate-800 dark:bg-slate-900 lg:static lg:translate-x-0', sidebar ? 'translate-x-0' : '-translate-x-full')}>
+      <aside class=${cx('fixed inset-y-0 left-0 z-30 w-52 transform border-r border-slate-200 bg-white p-2.5 transition-transform dark:border-slate-800 dark:bg-slate-900 lg:static lg:translate-x-0', sidebar ? 'translate-x-0' : '-translate-x-full')}>
         <div class="mb-4 flex items-center gap-2 px-2">
-          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white dark:bg-white dark:text-slate-900">SG</div>
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white">SG</div>
           <div><div class="text-sm font-bold leading-none">SIGEM</div><div class="text-[10px] text-slate-400">Equipos biomédicos</div></div>
         </div>
-        <nav class="space-y-0.5">${NAV.map(([k, l, ic]) => html`<button key=${k} onClick=${() => go(k)} class=${cx('flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition', view === k ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800')}><span class="w-4 text-center opacity-70">${ic}</span>${l}</button>`)}</nav>
+        <nav class="space-y-0.5">${NAV.map(([k, l, ic]) => html`<button key=${k} onClick=${() => go(k)} class=${cx('flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition', view === k ? 'bg-brand text-white dark:bg-brand-dk' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800')}><span class="w-4 text-center opacity-70">${ic}</span>${l}</button>`)}</nav>
       </aside>
       ${sidebar && html`<div class="fixed inset-0 z-20 bg-black/30 lg:hidden" onClick=${() => setSidebar(false)}></div>`}
 
