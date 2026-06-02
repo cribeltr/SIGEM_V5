@@ -123,7 +123,7 @@
     return html`<button onClick=${onClick} class=${cx('inline-flex items-center justify-center gap-1.5 rounded-full font-semibold transition focus:outline-none focus:ring-2 focus:ring-brand/40 disabled:opacity-50', v, s, className)} ...${rest}>${children}</button>`;
   }
 
-  function Card({ children, className }) { return html`<div class=${cx('rounded-2xl border border-slate-200/80 bg-white p-5 shadow-soft dark:border-slate-800 dark:bg-slate-900', className)}>${children}</div>`; }
+  function Card({ children, className }) { return html`<div class=${cx('rounded-xl border border-slate-200 bg-white p-4 shadow-soft dark:border-ink-line dark:bg-ink-800', className)}>${children}</div>`; }
 
   const KPI_TONE = {
     red:   { num: 'text-noop',  ring: 'bg-noop/10 text-noop',   bar: 'bg-noop' },
@@ -134,13 +134,13 @@
   };
   function KPI({ label, value, sub, tone, icon, onClick }) {
     const t = KPI_TONE[tone] || KPI_TONE.slate;
-    return html`<button onClick=${onClick} class=${cx('group relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 text-left shadow-soft transition dark:border-slate-800 dark:bg-slate-900', onClick && 'hover:-translate-y-0.5 hover:shadow-lift cursor-pointer')}>
+    return html`<button onClick=${onClick} class=${cx('group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-3.5 text-left shadow-soft transition dark:border-ink-line dark:bg-ink-800', onClick && 'cursor-pointer hover:border-brand/50 hover:shadow-glow')}>
       <div class="flex items-start justify-between">
-        <div class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">${label}</div>
-        ${icon && html`<span class=${cx('flex h-7 w-7 items-center justify-center rounded-xl text-sm', t.ring)}>${icon}</span>`}
+        <div class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">${label}</div>
+        ${icon && html`<span class=${cx('flex h-7 w-7 items-center justify-center rounded-lg text-sm', t.ring)}>${icon}</span>`}
       </div>
-      <div class=${cx('mt-2 text-3xl font-bold tracking-tight mono', t.num)}>${value}</div>
-      ${sub && html`<div class="mt-0.5 text-xs text-slate-400">${sub}</div>`}
+      <div class=${cx('mt-1.5 text-[28px] font-bold leading-none tracking-tight mono', t.num)}>${value}</div>
+      ${sub && html`<div class="mt-1 text-[11px] text-slate-400">${sub}</div>`}
       <span class=${cx('absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 transition group-hover:scale-x-100', t.bar)}></span>
     </button>`;
   }
@@ -906,48 +906,46 @@
     const titulo = (NAV.find(n => n[0] === view) || [])[1] || '';
 
     const NAV_MOBILE = ['cola', 'correctivos', 'equipos', 'pendientes'];
-    return html`<div class="flex h-full bg-slate-50 dark:bg-slate-950">
-      <!-- Sidebar flotante (escritorio) / drawer (móvil) -->
-      <aside class=${cx('fixed inset-y-0 left-0 z-30 flex w-64 transform flex-col p-3 transition-transform lg:static lg:translate-x-0', sidebar ? 'translate-x-0' : '-translate-x-full')}>
-        <div class="flex h-full flex-col rounded-3xl border border-slate-200/70 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900">
-          <div class="flex items-center gap-3 px-4 pt-5">
-            <div class="brand-gradient flex h-10 w-10 items-center justify-center rounded-2xl text-base font-black text-white shadow-lift">S</div>
-            <div><div class="text-[15px] font-extrabold leading-none tracking-tight">SIGEM</div><div class="mt-0.5 text-[11px] text-slate-400">Equipos biomédicos</div></div>
-          </div>
-          <nav class="mt-5 flex-1 space-y-1 overflow-y-auto px-2.5 pb-3">${NAV.map(([k, l, ic]) => html`<button key=${k} onClick=${() => go(k)} class=${cx('group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition', view === k ? 'bg-brand text-white shadow-soft dark:bg-brand-3 dark:text-brand-ink' : 'text-slate-500 hover:bg-brand/5 hover:text-brand dark:text-slate-400 dark:hover:bg-white/5')}>
-            <span class=${cx('flex h-7 w-7 items-center justify-center rounded-xl text-[15px]', view === k ? 'bg-white/20' : 'bg-slate-100 text-slate-500 group-hover:bg-brand/10 group-hover:text-brand dark:bg-slate-800')}>${ic}</span>${l}
-          </button>`)}</nav>
-          <div class="border-t border-slate-100 px-4 py-3 text-[11px] text-slate-400 dark:border-slate-800">
-            <div class="flex items-center gap-2"><span class=${cx('h-2 w-2 rounded-full', GAS ? 'bg-op' : 'bg-st')}></span>${GAS ? 'Sincronizado · Sheets' : 'Local (demo)'}</div>
-            <div class="mt-0.5 truncate">${user || 'sesión local'} · v5.0.0</div>
-          </div>
+    return html`<div class="flex h-full bg-slate-100 text-slate-800 dark:bg-ink-900 dark:text-slate-200">
+      <!-- Rail lateral tipo consola (escritorio) / drawer (móvil) -->
+      <aside class=${cx('fixed inset-y-0 left-0 z-30 flex w-60 transform flex-col border-r border-slate-200 bg-white transition-transform dark:border-ink-line dark:bg-ink-800 lg:static lg:translate-x-0', sidebar ? 'translate-x-0' : '-translate-x-full')}>
+        <div class="flex items-center gap-2.5 border-b border-slate-200 px-4 py-3.5 dark:border-ink-line">
+          <div class="brand-gradient flex h-9 w-9 items-center justify-center rounded-lg text-base font-black text-ink-900 shadow-glow">S</div>
+          <div><div class="text-sm font-extrabold leading-none tracking-tight">SIGEM</div><div class="mt-0.5 text-[10px] uppercase tracking-widest text-brand">control · biomédica</div></div>
+        </div>
+        <nav class="flex-1 space-y-0.5 overflow-y-auto p-2">${NAV.map(([k, l, ic]) => html`<button key=${k} onClick=${() => go(k)} class=${cx('group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition', view === k ? 'bg-brand/10 text-brand dark:bg-brand/15' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200')}>
+          ${view === k && html`<span class="absolute inset-y-1.5 left-0 w-0.5 rounded-full bg-brand shadow-glow"></span>`}
+          <span class=${cx('flex h-6 w-6 items-center justify-center rounded-md text-sm', view === k ? 'text-brand' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300')}>${ic}</span>${l}
+        </button>`)}</nav>
+        <div class="border-t border-slate-200 px-4 py-2.5 text-[11px] text-slate-400 dark:border-ink-line">
+          <div class="flex items-center gap-2"><span class=${cx('h-2 w-2 rounded-full', GAS ? 'bg-op shadow-glow' : 'bg-st')}></span>${GAS ? 'Sincronizado · Sheets' : 'Local (demo)'}</div>
+          <div class="mt-0.5 truncate font-mono">${user || 'sesión local'} · v5.0.0</div>
         </div>
       </aside>
-      ${sidebar && html`<div class="fixed inset-0 z-20 bg-slate-900/40 backdrop-blur-sm lg:hidden" onClick=${() => setSidebar(false)}></div>`}
+      ${sidebar && html`<div class="fixed inset-0 z-20 bg-ink-900/60 backdrop-blur-sm lg:hidden" onClick=${() => setSidebar(false)}></div>`}
 
       <!-- Main -->
       <div class="flex min-w-0 flex-1 flex-col">
-        <header class="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200/70 bg-slate-50/80 px-4 py-3 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/80 lg:px-6">
-          <button class="rounded-xl border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900 lg:hidden" onClick=${() => setSidebar(true)} aria-label="Menú">☰</button>
+        <header class="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200 bg-white/85 px-4 py-2.5 backdrop-blur-md dark:border-ink-line dark:bg-ink-800/85 lg:px-6">
+          <button class="rounded-lg border border-slate-200 p-1.5 dark:border-ink-line lg:hidden" onClick=${() => setSidebar(true)} aria-label="Menú">☰</button>
           <div>
-            <h1 class="text-lg font-extrabold tracking-tight">${titulo}</h1>
-            <div class="hidden text-xs text-slate-400 sm:block">Gestión de mantenimiento preventivo y correctivo</div>
+            <h1 class="flex items-center gap-2 text-base font-extrabold tracking-tight"><span class="hidden h-1.5 w-1.5 rounded-full bg-brand shadow-glow sm:inline-block"></span>${titulo}</h1>
           </div>
           <div class="ml-auto flex items-center gap-2">
-            <button onClick=${() => setPalette(true)} class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs text-slate-400 transition hover:border-brand/40 hover:text-brand dark:border-slate-700 dark:bg-slate-900 sm:flex">🔍 Buscar… <kbd class="rounded bg-slate-100 px-1.5 py-0.5 dark:bg-slate-800">⌘K</kbd></button>
-            <button onClick=${() => setPalette(true)} class="rounded-full border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900 sm:hidden" aria-label="Buscar">🔍</button>
-            <button onClick=${toggleDark} class="rounded-full border border-slate-200 bg-white p-2 text-slate-500 transition hover:text-brand dark:border-slate-700 dark:bg-slate-900" aria-label="Tema">${dark ? '☀' : '☾'}</button>
+            <button onClick=${() => setPalette(true)} class="hidden items-center gap-2 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-400 transition hover:border-brand/50 hover:text-brand dark:border-ink-line sm:flex">⌕ Buscar… <kbd class="rounded bg-slate-100 px-1.5 py-0.5 font-mono dark:bg-ink-600">⌘K</kbd></button>
+            <button onClick=${() => setPalette(true)} class="rounded-lg border border-slate-200 p-1.5 dark:border-ink-line sm:hidden" aria-label="Buscar">⌕</button>
+            <button onClick=${toggleDark} class="rounded-lg border border-slate-200 p-1.5 text-slate-500 transition hover:text-brand dark:border-ink-line" aria-label="Tema">${dark ? '☀' : '☾'}</button>
           </div>
         </header>
         <main class="scrollbar-thin flex-1 overflow-y-auto p-4 pb-24 lg:p-6 lg:pb-6">${viewNode}</main>
       </div>
 
       <!-- Barra inferior tipo app (móvil/tablet, para terreno) -->
-      <nav class="fixed inset-x-0 bottom-0 z-20 flex border-t border-slate-200 bg-white/95 px-2 py-1.5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 lg:hidden">
-        ${NAV_MOBILE.map(k => { const item = NAV.find(n => n[0] === k); return html`<button key=${k} onClick=${() => go(k)} class=${cx('flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-semibold transition', view === k ? 'text-brand' : 'text-slate-400')}>
+      <nav class="fixed inset-x-0 bottom-0 z-20 flex border-t border-slate-200 bg-white/95 px-2 py-1.5 backdrop-blur dark:border-ink-line dark:bg-ink-800/95 lg:hidden">
+        ${NAV_MOBILE.map(k => { const item = NAV.find(n => n[0] === k); return html`<button key=${k} onClick=${() => go(k)} class=${cx('flex flex-1 flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10px] font-semibold transition', view === k ? 'text-brand' : 'text-slate-400')}>
           <span class="text-lg">${item[2]}</span>${item[1].split(' ')[0]}
         </button>`; })}
-        <button onClick=${() => setSidebar(true)} class="flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-semibold text-slate-400"><span class="text-lg">⋯</span>Más</button>
+        <button onClick=${() => setSidebar(true)} class="flex flex-1 flex-col items-center gap-0.5 rounded-lg py-1.5 text-[10px] font-semibold text-slate-400"><span class="text-lg">⋯</span>Más</button>
       </nav>
 
       <!-- Drawers / overlays -->
@@ -966,7 +964,8 @@
   // ==========================================================================
   async function boot() {
     // Tema persistido
-    try { if (localStorage.getItem('sigem_theme') === 'dark') document.documentElement.classList.add('dark'); } catch (e) {}
+    // Tema "centro de control": oscuro por defecto; solo se aclara si el usuario lo eligió.
+    try { document.documentElement.classList.toggle('dark', localStorage.getItem('sigem_theme') !== 'light'); } catch (e) {}
     HHHA.configure({
       ui: { notify: (m, t) => toastFn(m, t === 'success' ? 'ok' : 'warn'), confirm: (m) => window.confirm(m), prompt: (m) => window.prompt(m), alert: (m) => toastFn(m, 'warn'), onChange: () => { forceRoot(); } },
       env: { xlsx: (typeof XLSX !== 'undefined') ? XLSX : null }

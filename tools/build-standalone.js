@@ -36,7 +36,7 @@ const core = read('src/core/hhha-core.js');
 const app = read('web/js/app.js');
 
 const docHtml = `<!DOCTYPE html>
-<html lang="es" class="h-full">
+<html lang="es" class="h-full dark">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -44,9 +44,10 @@ const docHtml = `<!DOCTYPE html>
 <style>
 ${tw}
 html,body,#root{height:100%}
-body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:14px;line-height:1.5}
-.mono{font-variant-numeric:tabular-nums;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;letter-spacing:-.2px}
-.brand-gradient{background-image:linear-gradient(120deg,#0d9488 0%,#0f766e 55%,#115e59 100%)}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:13px;line-height:1.45}
+.dark body{background:#0b1220}
+.mono{font-variant-numeric:tabular-nums;font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em;letter-spacing:-.2px}
+.brand-gradient{background-image:linear-gradient(120deg,#0891b2 0%,#06b6d4 55%,#22d3ee 100%)}
 .scrollbar-thin::-webkit-scrollbar{width:8px;height:8px}
 .scrollbar-thin::-webkit-scrollbar-thumb{background:rgba(120,120,120,.35);border-radius:8px}
 [data-drawer],[data-overlay]{transition:transform .18s ease,opacity .18s ease}

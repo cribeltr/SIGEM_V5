@@ -4,16 +4,17 @@ module.exports = {
   content: ['./web/js/app.js', './web/index.html'],
   theme: { extend: {
     colors: {
-      brand: { DEFAULT: '#0d9488', 2: '#0f766e', 3: '#14b8a6', dk: '#2dd4bf', ink: '#042f2e' },
-      accent:{ DEFAULT: '#f59e0b', dk: '#fbbf24' },
-      op:    { DEFAULT: '#0f9d6b', soft: '#e6f6ef', dk: '#2bbd83' },
-      noop:  { DEFAULT: '#e0334b', soft: '#fdecef', dk: '#f1647c' },
-      st:    { DEFAULT: '#d98613', soft: '#fcf2e3', dk: '#e6a23c' },
-      baja:  { DEFAULT: '#6b7280', soft: '#eef0f2', dk: '#8b94a0' },
-      desc:  { DEFAULT: '#8a93a0', soft: '#eef1f4', dk: '#79828e' }
+      brand: { DEFAULT: '#22d3ee', 2: '#0891b2', 3: '#67e8f9', dk: '#22d3ee', ink: '#04212b' },
+      lime:  { DEFAULT: '#a3e635', dk: '#bef264' },
+      ink:   { 900: '#0b1220', 800: '#0f1729', 700: '#141d30', 600: '#1b2740', line: '#22304d' },
+      op:    { DEFAULT: '#22c55e', soft: '#0f2a1a', dk: '#4ade80' },
+      noop:  { DEFAULT: '#f43f5e', soft: '#2a0f17', dk: '#fb7185' },
+      st:    { DEFAULT: '#f59e0b', soft: '#2a1f08', dk: '#fbbf24' },
+      baja:  { DEFAULT: '#64748b', soft: '#1a2233', dk: '#94a3b8' },
+      desc:  { DEFAULT: '#64748b', soft: '#1a2233', dk: '#94a3b8' }
     },
-    borderRadius: { md: '10px', lg: '14px', xl: '18px', '2xl': '24px' },
-    boxShadow: { soft: '0 1px 2px rgba(13,148,136,.04), 0 6px 24px -8px rgba(15,23,42,.12)', lift: '0 10px 40px -12px rgba(13,148,136,.30)' },
+    borderRadius: { md: '6px', lg: '8px', xl: '11px', '2xl': '14px' },
+    boxShadow: { soft: '0 1px 2px rgba(0,0,0,.4)', lift: '0 8px 30px -8px rgba(0,0,0,.6)', glow: '0 0 0 1px rgba(34,211,238,.25), 0 0 24px -6px rgba(34,211,238,.45)' },
     fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] }
   } }
 };
