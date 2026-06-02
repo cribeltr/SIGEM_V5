@@ -1,0 +1,18 @@
+{
+  "name": "sigem",
+  "version": "5.0.0",
+  "private": true,
+  "description": "SIGEM_V5 · Gestión de mantenimiento de equipos biomédicos. Frontend HTML (React+htm+Tailwind por CDN) servido por Apps Script; almacenamiento en Google Sheets. Lógica de negocio idéntica al núcleo original.",
+  "type": "commonjs",
+  "scripts": {
+    "clean-seed": "node tools/clean-seed.js",
+    "build": "node tools/build.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "node tools/build.js && echo \"Listo: pega dist/Index.html en Apps Script (Index) y apps-script/Code.gs (Code.gs).\""
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "license": "UNLICENSED"
+}
