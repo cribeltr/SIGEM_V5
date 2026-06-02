@@ -7,6 +7,7 @@
   "scripts": {
     "clean-seed": "node tools/clean-seed.js",
     "build": "node tools/build.js",
+    "build:preview": "node tools/build-standalone.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "start": "node tools/build.js && echo \"Listo: pega dist/Index.html en Apps Script (Index) y apps-script/Code.gs (Code.gs).\""
